@@ -1,0 +1,41 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ClassEntity {
+  className: String!
+  id: String!
+}
+
+input CreateClassInput {
+  className: String!
+}
+
+input CreateStudentInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Mutation {
+  createClass(createClassInput: CreateClassInput!): ClassEntity!
+  createStudent(createStudentInput: CreateStudentInput!): Student!
+  removeStudent(id: Int!): Student!
+  updateStudent(updateStudentInput: UpdateStudentInput!): Student!
+}
+
+type Query {
+  student(id: Int!): Student!
+  students: [Student!]!
+}
+
+type Student {
+  classId: String!
+  id: String!
+  studentName: String!
+}
+
+input UpdateStudentInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
