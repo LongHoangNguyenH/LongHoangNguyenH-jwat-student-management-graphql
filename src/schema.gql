@@ -3,39 +3,39 @@
 # ------------------------------------------------------
 
 type ClassEntity {
-  className: String!
   id: String!
+  className: String!
+}
+
+type StudentEntity {
+  id: String!
+  studentName: String!
+  classId: String!
+}
+
+type Query {
+  findOneStudent(id: String!): StudentEntity!
+  findAllStudent: [StudentEntity!]!
+  findOne(id: String!): ClassEntity!
+  findAll: [ClassEntity!]!
+}
+
+type Mutation {
+  createStudent(createStudentInput: CreateStudentInput!): StudentEntity!
+  create(createClassInput: CreateClassInput!): ClassEntity!
+  update(id: String!, updateClassInput: UpdateClassInput!): ClassEntity!
+  remove(id: String!): ClassEntity!
+}
+
+input CreateStudentInput {
+  studentName: String!
+  classId: String!
 }
 
 input CreateClassInput {
   className: String!
 }
 
-input CreateStudentInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
-}
-
-type Mutation {
-  createClass(createClassInput: CreateClassInput!): ClassEntity!
-  createStudent(createStudentInput: CreateStudentInput!): Student!
-  removeStudent(id: Int!): Student!
-  updateStudent(updateStudentInput: UpdateStudentInput!): Student!
-}
-
-type Query {
-  student(id: Int!): Student!
-  students: [Student!]!
-}
-
-type Student {
-  classId: String!
-  id: String!
-  studentName: String!
-}
-
-input UpdateStudentInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+input UpdateClassInput {
+  className: String!
 }
