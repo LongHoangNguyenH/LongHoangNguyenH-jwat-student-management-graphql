@@ -13,6 +13,10 @@ type StudentEntity {
   classId: String!
 }
 
+type DeleteMessage {
+  message: String
+}
+
 type Query {
   findOneStudent(id: String!): StudentEntity!
   findAllStudent: [StudentEntity!]!
@@ -25,10 +29,10 @@ type Query {
 type Mutation {
   createStudent(createStudentInput: CreateStudentInput!): StudentEntity!
   updateStudent(id: String!, updateStudentInput: UpdateStudentInput!): StudentEntity!
-  removeStudents(id: String!): StudentEntity!
+  removeStudents(id: String!): DeleteMessage!
   create(createClassInput: CreateClassInput!): ClassEntity!
   update(id: String!, updateClassInput: UpdateClassInput!): ClassEntity!
-  remove(id: String!): ClassEntity!
+  remove(id: String!): DeleteMessage!
 }
 
 input CreateStudentInput {

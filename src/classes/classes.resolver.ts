@@ -4,6 +4,7 @@ import { ClassEntity } from './entities/class.entity';
 import { CreateClassInput } from './dto/create-class.input';
 import { UpdateClassInput } from './dto/update-class.input';
 import { ParseUUIDPipe } from '@nestjs/common';
+import { DeleteMessage } from 'src/common/message/deleteMessage.response';
 
 @Resolver(() => ClassEntity)
 export class ClassesResolver {
@@ -29,7 +30,7 @@ export class ClassesResolver {
     return await this.classesService.update(id, updateClassInput);
   }
 
-  @Mutation(() => ClassEntity)
+  @Mutation(() => DeleteMessage)
   async remove(@Args('id', ParseUUIDPipe) id: string) {
     return await this.classesService.remove(id);
   }

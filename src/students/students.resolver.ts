@@ -4,6 +4,7 @@ import { StudentEntity } from './entities/student.entity';
 import { CreateStudentInput } from './dto/create-student.input';
 import { ParseUUIDPipe } from '@nestjs/common';
 import { UpdateStudentInput } from './dto/update-student.input';
+import { DeleteMessage } from 'src/common/message/deleteMessage.response';
 
 @Resolver(() => StudentEntity)
 export class StudentsResolver {
@@ -42,8 +43,8 @@ export class StudentsResolver {
     return this.studentsService.updateStudent(id, updateStudentInput);
   }
 
-  @Mutation(() => StudentEntity)
-  removeStudents(@Args('id', ParseUUIDPipe) id: string) {
-    return this.studentsService.removeStudent(id);
+  @Mutation(() => DeleteMessage)
+  async removeStudents(@Args('id', ParseUUIDPipe) id: string) {
+    return await this.studentsService.removeStudent(id);
   }
 }

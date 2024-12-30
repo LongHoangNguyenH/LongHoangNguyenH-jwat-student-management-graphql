@@ -7,6 +7,7 @@ import { CLASS_EXISTS, CLASS_EXISTS_STUDENT, CLASS_NOT_FOUND } from 'src/common/
 import { v4 as uuidv4 } from 'uuid';
 import { UpdateClassInput } from './dto/update-class.input';
 import { StudentEntity } from 'src/students/entities/student.entity';
+import { DeleteMessage } from 'src/common/message/deleteMessage.response';
 @Injectable()
 export class ClassesService {
   constructor(
@@ -52,7 +53,7 @@ export class ClassesService {
     if (updateClassInput.className == '') {
       updateClassInput.className = currentClass.className;
     }
-    currentClass.className = updateClassInput.className;
+    currentClass.className = updateClassInput.className.toLowerCase();
     return this.datasource.getRepository(ClassEntity).save(currentClass);
   }
 
@@ -73,12 +74,12 @@ export class ClassesService {
     if (studentsLengthInClass > 0) {
       throw new BadRequestException(CLASS_EXISTS_STUDENT);
     }
-    return this.datasource
+    await this.datasource
       .getRepository(ClassEntity)
-      .createQueryBuilder('class')
+      .createQueryBuilder('classes')
       .delete()
-      .where('id = :id', { id })
+      .where('classes.id = :id', { id })
       .execute();
-    // return this.classesRepository.remove(currentClass);
+    return new DeleteMessage('Class deleted successfully');
   }
 }

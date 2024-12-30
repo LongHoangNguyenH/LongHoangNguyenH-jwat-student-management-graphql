@@ -7,6 +7,7 @@ import { CLASS_NOT_FOUND, STUDENT_EXISTS, STUDENT_NOT_FOUND } from 'src/common/e
 import { v4 as uuid } from 'uuid';
 import { ClassEntity } from 'src/classes/entities/class.entity';
 import { UpdateStudentInput } from './dto/update-student.input';
+import { DeleteMessage } from 'src/common/message/deleteMessage.response';
 
 @Injectable()
 export class StudentsService {
@@ -43,26 +44,25 @@ export class StudentsService {
   }
 
   async findByClassname(className: string) {
+    className = className.toLowerCase();
     const existingClass = await this.datasource
       .getRepository(ClassEntity)
       .createQueryBuilder('classes')
       .where('classes.className = :className', { className })
       .getOne();
-    console.log(existingClass);
     if (!existingClass) {
       throw new BadRequestException(CLASS_NOT_FOUND);
     }
-    const searched = await this.datasource
+    return await this.datasource
       .getRepository(StudentEntity)
       .createQueryBuilder('students')
       .leftJoin('students.classId', 'Student_with_Class')
       .where('Student_with_Class.className = :className', { className })
       .getMany();
-    console.log(searched);
-    return searched;
   }
 
   findLIKEByName(studentName: string) {
+    studentName = studentName.toLowerCase();
     return this.datasource
       .getRepository(StudentEntity)
       .createQueryBuilder('students')
@@ -86,10 +86,11 @@ export class StudentsService {
   }
 
   async removeStudent(id: string) {
-    const existingStudent = await this.studentsRepository.findOne({ where: { id } });
+    const existingStudent = await this.studentsRepository.findOne({ where: { id }, relations: ['classId'] });
     if (!existingStudent) {
       throw new BadRequestException(STUDENT_NOT_FOUND);
     }
-    return await this.studentsRepository.remove(existingStudent);
+    await this.studentsRepository.remove(existingStudent);
+    return new DeleteMessage('Student deleted successfully');
   }
 }
