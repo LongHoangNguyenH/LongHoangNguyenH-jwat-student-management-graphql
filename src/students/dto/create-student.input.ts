@@ -1,5 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
-import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 import { CLASS_ID_UNVALID, STUDENT_NAME_INVALID, STUDENT_NAME_REQUIRED } from 'src/common/error/constants.error';
 
 @InputType()
@@ -9,6 +9,7 @@ export class CreateStudentInput {
   @IsNotEmpty({ message: STUDENT_NAME_REQUIRED })
   @MaxLength(50)
   @MinLength(1)
+  @Matches(/^[a-zA-Z0-9]+$/, { message: STUDENT_NAME_INVALID })
   studentName: string;
 
   @Field(() => String)
