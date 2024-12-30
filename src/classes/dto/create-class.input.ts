@@ -12,6 +12,6 @@ export class CreateClassInput {
   @IsString({ message: CLASS_NAME_UNVALID })
   @IsNotEmpty({ message: CLASS_NAME_REQUIRED })
   @MaxLength(9, { message: CLASS_NAME_MAX_LENGTH })
-  @Matches(/^[a-zA-Z0-9]+$/, { message: CLASS_NAME_UNVALID })
+  @Matches(/^[a-zA-Z 0-9.]+$/, { message: CLASS_NAME_UNVALID })
   className: string;
 }

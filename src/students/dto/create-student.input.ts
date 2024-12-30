@@ -9,7 +9,7 @@ export class CreateStudentInput {
   @IsNotEmpty({ message: STUDENT_NAME_REQUIRED })
   @MaxLength(50)
   @MinLength(1)
-  @Matches(/^[a-zA-Z0-9]+$/, { message: STUDENT_NAME_INVALID })
+  @Matches(/^[a-z A-Z]+$/, { message: STUDENT_NAME_INVALID })
   studentName: string;
 
   @Field(() => String)

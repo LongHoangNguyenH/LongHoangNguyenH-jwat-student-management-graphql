@@ -7,7 +7,7 @@ export class UpdateStudentInput {
   @Field(() => String)
   @IsOptional()
   @IsString()
-  @Matches(/^[a-zA-Z0-9]+$/, { message: CLASS_NAME_UNVALID })
+  @Matches(/^[a-z A-Z]+$/, { message: CLASS_NAME_UNVALID })
   studentName: string;
 
   @Field(() => String)
