@@ -24,12 +24,19 @@ type Query {
 
 type Mutation {
   createStudent(createStudentInput: CreateStudentInput!): StudentEntity!
+  updateStudent(id: String!, updateStudentInput: UpdateStudentInput!): StudentEntity!
+  removeStudents(id: String!): StudentEntity!
   create(createClassInput: CreateClassInput!): ClassEntity!
   update(id: String!, updateClassInput: UpdateClassInput!): ClassEntity!
   remove(id: String!): ClassEntity!
 }
 
 input CreateStudentInput {
+  studentName: String!
+  classId: String!
+}
+
+input UpdateStudentInput {
   studentName: String!
   classId: String!
 }

@@ -3,9 +3,10 @@ import { CreateStudentInput } from './dto/create-student.input';
 import { DataSource, Repository } from 'typeorm';
 import { StudentEntity } from './entities/student.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CLASS_NOT_FOUND, STUDENT_EXISTS } from 'src/common/error/constants.error';
+import { CLASS_NOT_FOUND, STUDENT_EXISTS, STUDENT_NOT_FOUND } from 'src/common/error/constants.error';
 import { v4 as uuid } from 'uuid';
 import { ClassEntity } from 'src/classes/entities/class.entity';
+import { UpdateStudentInput } from './dto/update-student.input';
 
 @Injectable()
 export class StudentsService {
@@ -67,5 +68,28 @@ export class StudentsService {
       .createQueryBuilder('students')
       .where('students.studentName LIKE :studentName', { studentName: `%${studentName.toLowerCase()}%` })
       .getMany();
+  }
+
+  async updateStudent(id: string, updateStudentInput: UpdateStudentInput) {
+    const existingStudent = await this.studentsRepository.findOne({ where: { id } });
+    if (!existingStudent) {
+      throw new BadRequestException(STUDENT_NOT_FOUND);
+    }
+
+    if (updateStudentInput.studentName == '') {
+      updateStudentInput.studentName = existingStudent.studentName;
+    } else if (updateStudentInput.classId == '') {
+      updateStudentInput.classId = existingStudent.classId;
+    }
+    Object.assign(existingStudent, updateStudentInput);
+    return this.studentsRepository.save(existingStudent);
+  }
+
+  async removeStudent(id: string) {
+    const existingStudent = await this.studentsRepository.findOne({ where: { id } });
+    if (!existingStudent) {
+      throw new BadRequestException(STUDENT_NOT_FOUND);
+    }
+    return await this.studentsRepository.remove(existingStudent);
   }
 }

@@ -3,6 +3,7 @@ import { StudentsService } from './students.service';
 import { StudentEntity } from './entities/student.entity';
 import { CreateStudentInput } from './dto/create-student.input';
 import { ParseUUIDPipe } from '@nestjs/common';
+import { UpdateStudentInput } from './dto/update-student.input';
 
 @Resolver(() => StudentEntity)
 export class StudentsResolver {
@@ -31,5 +32,18 @@ export class StudentsResolver {
   @Query(() => [StudentEntity])
   findLIKEByStudentName(@Args('studentName') studentName: string) {
     return this.studentsService.findLIKEByName(studentName);
+  }
+
+  @Mutation(() => StudentEntity)
+  updateStudent(
+    @Args('id', ParseUUIDPipe) id: string,
+    @Args('updateStudentInput') updateStudentInput: UpdateStudentInput,
+  ) {
+    return this.studentsService.updateStudent(id, updateStudentInput);
+  }
+
+  @Mutation(() => StudentEntity)
+  removeStudents(@Args('id', ParseUUIDPipe) id: string) {
+    return this.studentsService.removeStudent(id);
   }
 }
