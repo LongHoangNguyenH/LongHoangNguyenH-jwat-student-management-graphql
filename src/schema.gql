@@ -7,15 +7,29 @@ type ClassEntity {
   className: String!
 }
 
+type StudentEntity {
+  id: String!
+  studentName: String!
+  classId: String!
+}
+
 type Query {
+  findOneStudent(id: String!): StudentEntity!
+  findAllStudent: [StudentEntity!]!
   findOne(id: String!): ClassEntity!
   findAll: [ClassEntity!]!
 }
 
 type Mutation {
+  createStudent(createStudentInput: CreateStudentInput!): StudentEntity!
   create(createClassInput: CreateClassInput!): ClassEntity!
   update(id: String!, updateClassInput: UpdateClassInput!): ClassEntity!
   remove(id: String!): ClassEntity!
+}
+
+input CreateStudentInput {
+  studentName: String!
+  classId: String!
 }
 
 input CreateClassInput {
