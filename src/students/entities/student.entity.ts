@@ -20,7 +20,7 @@ export class StudentEntity {
   studentName: string;
 
   @Field(() => String)
-  @Column({ nullable: false, unique: true })
+  @Column({ nullable: false })
   @JoinColumn({ name: 'classId' })
   @ManyToOne(() => ClassEntity, ClassEntity => ClassEntity.id)
   classId: string;
