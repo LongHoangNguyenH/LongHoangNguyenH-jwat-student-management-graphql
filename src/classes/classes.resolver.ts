@@ -3,6 +3,7 @@ import { ClassesService } from './classes.service';
 import { ClassEntity } from './entities/class.entity';
 import { CreateClassInput } from './dto/create-class.input';
 import { UpdateClassInput } from './dto/update-class.input';
+import { ParseUUIDPipe } from '@nestjs/common';
 
 @Resolver(() => ClassEntity)
 export class ClassesResolver {
@@ -14,7 +15,7 @@ export class ClassesResolver {
   }
 
   @Query(() => ClassEntity)
-  async findOne(@Args('id', { type: () => String }) id: string): Promise<ClassEntity> {
+  async findOne(@Args('id', { type: () => String }, ParseUUIDPipe) id: string): Promise<ClassEntity> {
     return await this.classesService.findOne(id);
   }
 
@@ -24,12 +25,12 @@ export class ClassesResolver {
   }
 
   @Mutation(() => ClassEntity)
-  async update(@Args('id') id: string, @Args('updateClassInput') updateClassInput: UpdateClassInput) {
+  async update(@Args('id', ParseUUIDPipe) id: string, @Args('updateClassInput') updateClassInput: UpdateClassInput) {
     return await this.classesService.update(id, updateClassInput);
   }
 
   @Mutation(() => ClassEntity)
-  async remove(@Args('id') id: string) {
+  async remove(@Args('id', ParseUUIDPipe) id: string) {
     return await this.classesService.remove(id);
   }
 }
