@@ -3,19 +3,25 @@
 # ------------------------------------------------------
 
 type ClassEntity {
-  className: String!
   id: String!
+  className: String!
+}
+
+type Query {
+  findOne(id: String!): ClassEntity!
+  findAll: [ClassEntity!]!
+}
+
+type Mutation {
+  create(createClassInput: CreateClassInput!): ClassEntity!
+  update(id: String!, updateClassInput: UpdateClassInput!): ClassEntity!
+  remove(id: String!): ClassEntity!
 }
 
 input CreateClassInput {
   className: String!
 }
 
-type Mutation {
-  create(createClassInput: CreateClassInput!): ClassEntity!
-}
-
-type Query {
-  findAll: [ClassEntity!]!
-  findOne(id: String!): ClassEntity!
+input UpdateClassInput {
+  className: String!
 }

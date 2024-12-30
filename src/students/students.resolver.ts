@@ -1,8 +1,8 @@
 import { Resolver } from '@nestjs/graphql';
 import { StudentsService } from './students.service';
-import { Student } from './entities/student.entity';
+import { StudentEntity } from './entities/student.entity';
 
-@Resolver(() => Student)
+@Resolver(() => StudentEntity)
 export class StudentsResolver {
   constructor(private readonly studentsService: StudentsService) {}
 }

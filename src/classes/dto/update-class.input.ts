@@ -1,8 +1,10 @@
-import { CreateClassInput } from './create-class.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
+import { IsOptional, IsString } from 'class-validator';
+import { InputType, Field } from '@nestjs/graphql';
 
 @InputType()
-export class UpdateClassInput extends PartialType(CreateClassInput) {
-  @Field(() => Int)
-  id: number;
+export class UpdateClassInput {
+  @Field(() => String)
+  @IsOptional()
+  @IsString()
+  className?: string;
 }

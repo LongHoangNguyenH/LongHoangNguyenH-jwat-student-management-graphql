@@ -4,7 +4,13 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 
 @ObjectType()
 @Entity('students')
-export class Student {
+export class StudentEntity {
+  constructor(id: string, studentName: string, classId: string) {
+    this.id = id;
+    this.studentName = studentName;
+    this.classId = classId;
+  }
+
   @Field(() => String)
   @PrimaryColumn()
   id: string;

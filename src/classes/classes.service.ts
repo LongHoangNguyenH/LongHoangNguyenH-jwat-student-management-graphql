@@ -3,8 +3,10 @@ import { CreateClassInput } from './dto/create-class.input';
 import { ClassEntity } from './entities/class.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import { CLASS_EXISTS } from 'src/common/error/constants.error';
+import { CLASS_EXISTS, CLASS_EXISTS_STUDENT, CLASS_NOT_FOUND } from 'src/common/error/constants.error';
 import { v4 as uuidv4 } from 'uuid';
+import { UpdateClassInput } from './dto/update-class.input';
+import { StudentEntity } from 'src/students/entities/student.entity';
 @Injectable()
 export class ClassesService {
   constructor(
@@ -35,5 +37,48 @@ export class ClassesService {
 
   async findAll(): Promise<ClassEntity[]> {
     return await this.datasource.getRepository(ClassEntity).createQueryBuilder('class').getMany();
+  }
+
+  async update(id: string, updateClassInput: UpdateClassInput) {
+    const currentClass = await this.datasource
+      .getRepository(ClassEntity)
+      .createQueryBuilder('class')
+      .where('class.id = :id', { id })
+      .getOne();
+
+    if (!currentClass) {
+      throw new BadRequestException(CLASS_NOT_FOUND);
+    }
+    if (updateClassInput.className == '') {
+      updateClassInput.className = currentClass.className;
+    }
+    currentClass.className = updateClassInput.className;
+    return this.datasource.getRepository(ClassEntity).save(currentClass);
+  }
+
+  async remove(id: string) {
+    const currentClass = await this.datasource
+      .getRepository(ClassEntity)
+      .createQueryBuilder('class')
+      .where('class.id = :id', { id })
+      .getOne();
+    if (!currentClass) {
+      throw new BadRequestException(CLASS_NOT_FOUND);
+    }
+    const studentsLengthInClass = await this.datasource
+      .getRepository(StudentEntity)
+      .createQueryBuilder('students')
+      .where('students.classId = :id', { id: id })
+      .getCount();
+    if (studentsLengthInClass > 0) {
+      throw new BadRequestException(CLASS_EXISTS_STUDENT);
+    }
+    return this.datasource
+      .getRepository(ClassEntity)
+      .createQueryBuilder('class')
+      .delete()
+      .where('id = :id', { id })
+      .execute();
+    // return this.classesRepository.remove(currentClass);
   }
 }

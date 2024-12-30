@@ -2,6 +2,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { ClassesService } from './classes.service';
 import { ClassEntity } from './entities/class.entity';
 import { CreateClassInput } from './dto/create-class.input';
+import { UpdateClassInput } from './dto/update-class.input';
 
 @Resolver(() => ClassEntity)
 export class ClassesResolver {
@@ -20,5 +21,15 @@ export class ClassesResolver {
   @Query(() => [ClassEntity])
   async findAll(): Promise<ClassEntity[]> {
     return await this.classesService.findAll();
+  }
+
+  @Mutation(() => ClassEntity)
+  async update(@Args('id') id: string, @Args('updateClassInput') updateClassInput: UpdateClassInput) {
+    return await this.classesService.update(id, updateClassInput);
+  }
+
+  @Mutation(() => ClassEntity)
+  async remove(@Args('id') id: string) {
+    return await this.classesService.remove(id);
   }
 }
