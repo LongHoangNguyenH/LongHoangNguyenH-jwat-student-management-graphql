@@ -22,7 +22,7 @@ export class ClassesService {
     if (existingClass) {
       throw new BadRequestException(CLASS_EXISTS);
     }
-    const newClass = new ClassEntity(uuidv4(), args.className);
+    const newClass = new ClassEntity(uuidv4(), args.className.toLowerCase());
 
     return await this.classesRepository.save(newClass);
   }
