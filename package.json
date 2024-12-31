@@ -20,7 +20,12 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky",
     "pre-commit": "lint-staged",
-    "commitlint": "commitlint --edit"
+    "commitlint": "commitlint --edit",
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "migration:run": "npm run typeorm migration:run -- -d ./src/typeorm/database.migration.ts",
+    "migration:generate": "npm run typeorm -- -d ./src/typeorm/database.migration.ts migration:generate ./src/migrations/schoolapi_refactoring",
+    "migration:create": "npm run typeorm -- migration:create ./src/migrations/schoolapi_refactoring",
+    "migration:revert": "npm run typeorm -- -d ./src/typeorm/database.migration.ts migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
