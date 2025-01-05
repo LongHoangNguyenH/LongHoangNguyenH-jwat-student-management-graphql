@@ -7,6 +7,7 @@ import { UpdateStudentInput } from './dto/update-student.input';
 import { DeleteMessage } from 'src/common/message/deleteMessage.response';
 import { Roles } from 'src/common/decorator/role-decorator.decorator';
 import { ADMIN, PRINCIPAL, TEACHER } from 'src/common/guard/role';
+import { StudentAddClassNameResponse } from './response/addClassName.response';
 
 @Resolver(() => StudentEntity)
 export class StudentsResolver {
@@ -24,7 +25,7 @@ export class StudentsResolver {
     return this.studentsService.findOneStudent(id);
   }
 
-  @Query(() => [StudentEntity])
+  @Query(() => [StudentAddClassNameResponse])
   @Roles(ADMIN, TEACHER, PRINCIPAL)
   findAllStudent() {
     return this.studentsService.findAllStudent();

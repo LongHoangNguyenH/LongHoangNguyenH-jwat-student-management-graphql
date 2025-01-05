@@ -16,6 +16,7 @@ async function bootstrap() {
       stopAtFirstError: true,
     }),
   );
+  app.enableCors({ credentials: true, origin: process.env.CLIENT_URI });
   await app.listen(process.env.APP_PORT ?? 3000);
 }
 bootstrap();

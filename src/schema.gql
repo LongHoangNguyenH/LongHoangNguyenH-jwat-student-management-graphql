@@ -17,9 +17,16 @@ type DeleteMessage {
   message: String
 }
 
+type StudentAddClassNameResponse {
+  id: String!
+  studentName: String!
+  classId: String!
+  className: String!
+}
+
 type Query {
   findOneStudent(id: String!): StudentEntity!
-  findAllStudent: [StudentEntity!]!
+  findAllStudent: [StudentAddClassNameResponse!]!
   findByClassname(className: String!): [StudentEntity!]!
   findLIKEByStudentName(studentName: String!): [StudentEntity!]!
   findOne(id: String!): ClassEntity!

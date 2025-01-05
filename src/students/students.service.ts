@@ -40,7 +40,20 @@ export class StudentsService {
   }
 
   async findAllStudent() {
-    return await this.datasource.getRepository(StudentEntity).createQueryBuilder('student').getMany();
+    const data = await this.datasource
+      .getRepository(StudentEntity)
+      .createQueryBuilder('student')
+      .leftJoinAndSelect('student.classId', 'class')
+      .getMany();
+
+    const result = data.map(student => ({
+      id: student.id,
+      studentName: student.studentName,
+      classId: student.classId['id'],
+      className: student.classId['className'],
+    }));
+    console.log(result);
+    return result;
   }
 
   async findByClassname(className: string) {
