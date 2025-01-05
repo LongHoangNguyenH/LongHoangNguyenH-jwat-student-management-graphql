@@ -31,13 +31,13 @@ export class StudentsResolver {
     return this.studentsService.findAllStudent();
   }
 
-  @Query(() => [StudentEntity])
+  @Query(() => [StudentAddClassNameResponse])
   @Roles(ADMIN, TEACHER, PRINCIPAL)
   findByClassname(@Args('className') className: string) {
     return this.studentsService.findByClassname(className);
   }
 
-  @Query(() => [StudentEntity])
+  @Query(() => [StudentAddClassNameResponse])
   @Roles(ADMIN, TEACHER, PRINCIPAL)
   findLIKEByStudentName(@Args('studentName') studentName: string) {
     return this.studentsService.findLIKEByName(studentName);

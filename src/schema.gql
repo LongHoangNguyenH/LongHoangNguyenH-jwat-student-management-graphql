@@ -27,8 +27,8 @@ type StudentAddClassNameResponse {
 type Query {
   findOneStudent(id: String!): StudentEntity!
   findAllStudent: [StudentAddClassNameResponse!]!
-  findByClassname(className: String!): [StudentEntity!]!
-  findLIKEByStudentName(studentName: String!): [StudentEntity!]!
+  findByClassname(className: String!): [StudentAddClassNameResponse!]!
+  findLIKEByStudentName(studentName: String!): [StudentAddClassNameResponse!]!
   findOne(id: String!): ClassEntity!
   findAll: [ClassEntity!]!
 }

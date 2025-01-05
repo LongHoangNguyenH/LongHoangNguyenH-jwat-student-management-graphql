@@ -66,21 +66,34 @@ export class StudentsService {
     if (!existingClass) {
       throw new BadRequestException(CLASS_NOT_FOUND);
     }
-    return await this.datasource
+    const data = await this.datasource
       .getRepository(StudentEntity)
       .createQueryBuilder('students')
-      .leftJoin('students.classId', 'Student_with_Class')
+      .leftJoinAndSelect('students.classId', 'Student_with_Class')
       .where('Student_with_Class.className = :className', { className })
       .getMany();
+    return data.map(student => ({
+      id: student.id,
+      studentName: student.studentName,
+      classId: student.classId['id'],
+      className: student.classId['className'],
+    }));
   }
 
-  findLIKEByName(studentName: string) {
+  async findLIKEByName(studentName: string) {
     studentName = studentName.toLowerCase();
-    return this.datasource
+    const data = await this.datasource
       .getRepository(StudentEntity)
       .createQueryBuilder('students')
+      .leftJoinAndSelect('students.classId', 'Student_with_Class')
       .where('students.studentName LIKE :studentName', { studentName: `%${studentName.toLowerCase()}%` })
       .getMany();
+    return data.map(student => ({
+      id: student.id,
+      studentName: student.studentName,
+      classId: student.classId['id'],
+      className: student.classId['className'],
+    }));
   }
 
   async updateStudent(id: string, updateStudentInput: UpdateStudentInput) {
