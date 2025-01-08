@@ -14,31 +14,34 @@ export class ClassesResolver {
 
   @Mutation(() => ClassEntity)
   @Roles(ADMIN, PRINCIPAL)
-  async create(@Args('createClassInput') createClassInput: CreateClassInput): Promise<ClassEntity> {
+  async createClass(@Args('createClassInput') createClassInput: CreateClassInput): Promise<ClassEntity> {
     return await this.classesService.create(createClassInput);
   }
 
   @Query(() => ClassEntity)
   @Roles(ADMIN, PRINCIPAL, TEACHER)
-  async findOne(@Args('id', { type: () => String }, ParseUUIDPipe) id: string): Promise<ClassEntity> {
+  async findOneClass(@Args('id', { type: () => String }, ParseUUIDPipe) id: string): Promise<ClassEntity> {
     return await this.classesService.findOne(id);
   }
 
   @Query(() => [ClassEntity])
   @Roles(ADMIN, PRINCIPAL, TEACHER)
-  async findAll(): Promise<ClassEntity[]> {
+  async findAllClasses(): Promise<ClassEntity[]> {
     return await this.classesService.findAll();
   }
 
   @Mutation(() => ClassEntity)
   @Roles(ADMIN, PRINCIPAL)
-  async update(@Args('id', ParseUUIDPipe) id: string, @Args('updateClassInput') updateClassInput: UpdateClassInput) {
+  async updateClass(
+    @Args('id', ParseUUIDPipe) id: string,
+    @Args('updateClassInput') updateClassInput: UpdateClassInput,
+  ) {
     return await this.classesService.update(id, updateClassInput);
   }
 
   @Mutation(() => DeleteMessage)
   @Roles(ADMIN, PRINCIPAL)
-  async remove(@Args('id', ParseUUIDPipe) id: string) {
+  async removeClass(@Args('id', ParseUUIDPipe) id: string) {
     return await this.classesService.remove(id);
   }
 }

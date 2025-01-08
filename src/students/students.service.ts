@@ -23,11 +23,11 @@ export class StudentsService {
     if (existingStudent) {
       throw new BadRequestException(STUDENT_EXISTS);
     }
-    const newStudent = new StudentEntity(
-      uuid(),
-      createStudentInput.studentName.toLowerCase(),
-      createStudentInput.classId,
-    );
+    const newStudent = this.studentsRepository.create({
+      id: uuid(),
+      studentName: createStudentInput.studentName,
+      classId: createStudentInput.classId,
+    });
     return await this.studentsRepository.save(newStudent);
   }
 
@@ -52,7 +52,6 @@ export class StudentsService {
       classId: student.classId['id'],
       className: student.classId['className'],
     }));
-    console.log(result);
     return result;
   }
 

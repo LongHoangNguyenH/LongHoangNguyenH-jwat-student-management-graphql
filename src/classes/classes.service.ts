@@ -18,12 +18,15 @@ export class ClassesService {
 
   async create(args: CreateClassInput): Promise<ClassEntity> {
     const existingClass = await this.classesRepository.findOne({
-      where: { className: args.className },
+      where: { className: args.className.toLocaleLowerCase() },
     });
     if (existingClass) {
       throw new BadRequestException(CLASS_EXISTS);
     }
-    const newClass = new ClassEntity(uuidv4(), args.className.toLowerCase());
+    const newClass = this.classesRepository.create({
+      id: uuidv4(),
+      className: args.className,
+    });
 
     return await this.classesRepository.save(newClass);
   }
@@ -53,7 +56,7 @@ export class ClassesService {
     if (updateClassInput.className == '') {
       updateClassInput.className = currentClass.className;
     }
-    currentClass.className = updateClassInput.className.toLowerCase();
+    currentClass.className = updateClassInput.className;
     return this.datasource.getRepository(ClassEntity).save(currentClass);
   }
 
