@@ -1,11 +1,11 @@
 export class ErrorResponse {
-  message: string;
-  statusCode: number;
-  data?: any;
+  errorCode: string;
+  devMessage: string;
+  data: object;
 
-  constructor(message: string, statusCode: number, data?: any) {
-    this.message = message;
-    this.statusCode = statusCode;
+  constructor(errorCode: string, devMessage: string, data: object) {
+    this.errorCode = errorCode;
+    this.devMessage = devMessage;
     this.data = data;
   }
 }

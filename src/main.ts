@@ -1,6 +1,7 @@
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
+import { GlobalExceptionFilter } from './common/filter/graphql-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,7 +17,13 @@ async function bootstrap() {
       stopAtFirstError: true,
     }),
   );
-  app.enableCors({ credentials: true, origin: process.env.CLIENT_URI });
+  const httpAdapter = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new GlobalExceptionFilter(httpAdapter));
+  app.enableCors({
+    origin: process.env.CLIENT_URI,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
   await app.listen(process.env.APP_PORT ?? 3000);
 }
 bootstrap();
