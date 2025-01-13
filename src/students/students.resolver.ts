@@ -19,7 +19,7 @@ export class StudentsResolver {
     return this.studentsService.createStudent(createStudentInput);
   }
 
-  @Query(() => StudentEntity)
+  @Query(() => StudentAddClassNameResponse)
   @Roles(ADMIN, TEACHER, PRINCIPAL)
   findOneStudent(@Args('id', ParseUUIDPipe) id: string) {
     return this.studentsService.findOneStudent(id);

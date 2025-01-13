@@ -7,6 +7,6 @@ export class UpdateClassInput {
   @Field(() => String)
   @IsOptional()
   @IsString()
-  @Matches(/^[a-zA-Z0-9]+$/, { message: CLASS_NAME_UNVALID })
+  @Matches(/^[a-zA-Z0-9 .]+$/, { message: CLASS_NAME_UNVALID })
   className?: string;
 }
