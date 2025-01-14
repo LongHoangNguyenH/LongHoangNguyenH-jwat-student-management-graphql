@@ -25,7 +25,7 @@ export class ClassesService {
     }
     const newClass = this.classesRepository.create({
       id: uuidv4(),
-      className: args.className,
+      className: args.className.toLowerCase(),
     });
 
     return await this.classesRepository.save(newClass);

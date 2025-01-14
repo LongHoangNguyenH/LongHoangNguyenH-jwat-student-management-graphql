@@ -3,7 +3,7 @@ import { CreateStudentInput } from './dto/create-student.input';
 import { DataSource, Repository } from 'typeorm';
 import { StudentEntity } from './entities/student.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CLASS_NOT_FOUND, STUDENT_EXISTS, STUDENT_NOT_FOUND } from 'src/common/error/constants.error';
+import { STUDENT_EXISTS, STUDENT_NOT_FOUND } from 'src/common/error/constants.error';
 import { v4 as uuid } from 'uuid';
 import { ClassEntity } from 'src/classes/entities/class.entity';
 import { UpdateStudentInput } from './dto/update-student.input';
@@ -14,18 +14,20 @@ export class StudentsService {
   constructor(
     @InjectRepository(StudentEntity)
     private readonly studentsRepository: Repository<StudentEntity>,
+    @InjectRepository(ClassEntity)
+    private readonly classRepository: Repository<ClassEntity>,
     private readonly datasource: DataSource,
   ) {}
   async createStudent(createStudentInput: CreateStudentInput) {
     const existingStudent = await this.studentsRepository.findOne({
-      where: { studentName: createStudentInput.studentName },
+      where: { studentName: createStudentInput.studentName.toLowerCase() },
     });
     if (existingStudent) {
       throw new BadRequestException(STUDENT_EXISTS);
     }
     const newStudent = this.studentsRepository.create({
       id: uuid(),
-      studentName: createStudentInput.studentName,
+      studentName: createStudentInput.studentName.toLowerCase(),
       classId: createStudentInput.classId,
     });
     return await this.studentsRepository.save(newStudent);
@@ -65,42 +67,46 @@ export class StudentsService {
 
   async findByClassname(className: string) {
     className = className.toLowerCase();
-    const existingClass = await this.datasource
-      .getRepository(ClassEntity)
-      .createQueryBuilder('classes')
-      .where('classes.className = :className', { className })
-      .getOne();
-    if (!existingClass) {
-      throw new BadRequestException(CLASS_NOT_FOUND);
-    }
-    const data = await this.datasource
-      .getRepository(StudentEntity)
-      .createQueryBuilder('students')
-      .leftJoinAndSelect('students.classId', 'Student_with_Class')
-      .where('Student_with_Class.className = :className', { className })
+    const students = await this.studentsRepository
+      .createQueryBuilder('student')
+      .leftJoinAndSelect('student.classId', 'class')
       .getMany();
-    return data.map(student => ({
+    const result = students.map(student => ({
       id: student.id,
       studentName: student.studentName,
       classId: student.classId['id'],
       className: student.classId['className'],
     }));
+    console.log('result', result);
+    const final = [];
+    result.forEach(element => {
+      if (element.className.toLowerCase() == className) {
+        final.push(element);
+      }
+    });
+    return final;
   }
 
   async findLIKEByName(studentName: string) {
     studentName = studentName.toLowerCase();
-    const data = await this.datasource
-      .getRepository(StudentEntity)
-      .createQueryBuilder('students')
-      .leftJoinAndSelect('students.classId', 'Student_with_Class')
-      .where('students.studentName LIKE :studentName', { studentName: `%${studentName.toLowerCase()}%` })
+    const students = await this.studentsRepository
+      .createQueryBuilder('student')
+      .leftJoinAndSelect('student.classId', 'class')
       .getMany();
-    return data.map(student => ({
+    const result = students.map(student => ({
       id: student.id,
       studentName: student.studentName,
       classId: student.classId['id'],
       className: student.classId['className'],
     }));
+    console.log('result', result);
+    const final = [];
+    result.forEach(element => {
+      if (element.studentName.toLowerCase().includes(studentName)) {
+        final.push(element);
+      }
+    });
+    return final;
   }
 
   async updateStudent(id: string, updateStudentInput: UpdateStudentInput) {
