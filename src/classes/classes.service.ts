@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateClassInput } from './dto/create-class.input';
 import { ClassEntity } from './entities/class.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { CLASS_EXISTS, CLASS_EXISTS_STUDENT, CLASS_NOT_FOUND } from 'src/common/error/constants.error';
 import { v4 as uuidv4 } from 'uuid';
 import { UpdateClassInput } from './dto/update-class.input';
@@ -14,7 +14,6 @@ export class ClassesService {
     private readonly classesRepository: Repository<ClassEntity>,
     @InjectRepository(StudentEntity)
     private readonly studentsRepository: Repository<StudentEntity>,
-    private readonly datasource: DataSource,
   ) {}
 
   async createClass(args: CreateClassInput): Promise<ClassEntity> {
@@ -50,7 +49,7 @@ export class ClassesService {
     } else {
       currentClass.className = updateClassInput.className;
     }
-    return this.datasource.getRepository(ClassEntity).save(currentClass);
+    return await this.classesRepository.save(currentClass);
   }
 
   async removeClass(id: string) {
