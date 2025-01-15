@@ -14,18 +14,11 @@ type StudentEntity {
   cls: ClassEntity!
 }
 
-type StudentAddClassNameResponse {
-  id: String!
-  studentName: String!
-  classId: String!
-  className: String!
-}
-
 type Query {
-  findOneStudent(id: String!): StudentAddClassNameResponse!
-  findAllStudent: [StudentAddClassNameResponse!]!
-  findByClassname(className: String!): [StudentAddClassNameResponse!]!
-  findLIKEByStudentName(studentName: String!): [StudentAddClassNameResponse!]!
+  findOneStudent(id: String!): StudentEntity!
+  findAllStudent: [StudentEntity!]!
+  findByClassname(className: String!): [StudentEntity!]!
+  findLIKEByStudentName(studentName: String!): [StudentEntity!]!
   findOneClass(id: String!): ClassEntity!
   findAllClasses: [ClassEntity!]!
 }

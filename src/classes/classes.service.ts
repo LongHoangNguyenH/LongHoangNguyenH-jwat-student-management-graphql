@@ -61,7 +61,6 @@ export class ClassesService {
     const IsstudentsInClass = await this.studentsRepository.findOne({
       where: { cls: { id } },
     });
-    console.log(IsstudentsInClass);
     if (IsstudentsInClass) {
       throw new BadRequestException(CLASS_EXISTS_STUDENT);
     }
