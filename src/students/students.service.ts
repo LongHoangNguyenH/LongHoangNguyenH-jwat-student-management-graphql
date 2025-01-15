@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateStudentInput } from './dto/create-student.input';
-import { DataSource, ILike, Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { StudentEntity } from './entities/student.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CLASS_NOT_FOUND, STUDENT_EXISTS, STUDENT_NOT_FOUND } from 'src/common/error/constants.error';
@@ -15,7 +15,6 @@ export class StudentsService {
     private readonly studentsRepository: Repository<StudentEntity>,
     @InjectRepository(ClassEntity)
     private readonly classRepository: Repository<ClassEntity>,
-    private readonly datasource: DataSource,
   ) {}
   async createStudent(createStudentInput: CreateStudentInput) {
     const existingClass = await this.classRepository.findOne({
