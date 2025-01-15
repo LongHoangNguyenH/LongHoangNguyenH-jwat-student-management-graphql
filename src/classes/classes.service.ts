@@ -7,18 +7,19 @@ import { CLASS_EXISTS, CLASS_EXISTS_STUDENT, CLASS_NOT_FOUND } from 'src/common/
 import { v4 as uuidv4 } from 'uuid';
 import { UpdateClassInput } from './dto/update-class.input';
 import { StudentEntity } from 'src/students/entities/student.entity';
-import { DeleteMessage } from 'src/common/message/deleteMessage.response';
 @Injectable()
 export class ClassesService {
   constructor(
     @InjectRepository(ClassEntity)
     private readonly classesRepository: Repository<ClassEntity>,
+    @InjectRepository(StudentEntity)
+    private readonly studentsRepository: Repository<StudentEntity>,
     private readonly datasource: DataSource,
   ) {}
 
-  async create(args: CreateClassInput): Promise<ClassEntity> {
+  async createClass(args: CreateClassInput): Promise<ClassEntity> {
     const existingClass = await this.classesRepository.findOne({
-      where: { className: args.className.toLocaleLowerCase() },
+      where: { className: args.className.toLowerCase() },
     });
     if (existingClass) {
       throw new BadRequestException(CLASS_EXISTS);
@@ -31,58 +32,40 @@ export class ClassesService {
     return await this.classesRepository.save(newClass);
   }
 
-  async findOne(id: string): Promise<ClassEntity> {
-    return await this.datasource
-      .getRepository(ClassEntity)
-      .createQueryBuilder('class')
-      .where('class.id = :id', { id })
-      .getOne();
+  async findOneClass(id: string): Promise<ClassEntity> {
+    return await this.classesRepository.findOne({ where: { id } });
   }
 
-  async findAll(): Promise<ClassEntity[]> {
-    return await this.datasource.getRepository(ClassEntity).createQueryBuilder('class').getMany();
+  async findAllClasses(): Promise<ClassEntity[]> {
+    return await this.classesRepository.find({ order: { className: 'ASC' } });
   }
 
-  async update(id: string, updateClassInput: UpdateClassInput) {
-    const currentClass = await this.datasource
-      .getRepository(ClassEntity)
-      .createQueryBuilder('class')
-      .where('class.id = :id', { id })
-      .getOne();
-
+  async updateClass(id: string, updateClassInput: UpdateClassInput) {
+    const currentClass = await this.classesRepository.findOne({ where: { id } });
     if (!currentClass) {
       throw new BadRequestException(CLASS_NOT_FOUND);
     }
     if (updateClassInput.className == '') {
       updateClassInput.className = currentClass.className;
+    } else {
+      currentClass.className = updateClassInput.className;
     }
-    currentClass.className = updateClassInput.className;
     return this.datasource.getRepository(ClassEntity).save(currentClass);
   }
 
-  async remove(id: string) {
-    const currentClass = await this.datasource
-      .getRepository(ClassEntity)
-      .createQueryBuilder('class')
-      .where('class.id = :id', { id })
-      .getOne();
+  async removeClass(id: string) {
+    const currentClass = await this.classesRepository.findOne({ where: { id } });
     if (!currentClass) {
       throw new BadRequestException(CLASS_NOT_FOUND);
     }
-    const studentsLengthInClass = await this.datasource
-      .getRepository(StudentEntity)
-      .createQueryBuilder('students')
-      .where('students.classId = :id', { id: id })
-      .getCount();
-    if (studentsLengthInClass > 0) {
+    const IsstudentsInClass = await this.studentsRepository.findOne({
+      where: { cls: { id } },
+    });
+    console.log(IsstudentsInClass);
+    if (IsstudentsInClass) {
       throw new BadRequestException(CLASS_EXISTS_STUDENT);
     }
-    await this.datasource
-      .getRepository(ClassEntity)
-      .createQueryBuilder('classes')
-      .delete()
-      .where('classes.id = :id', { id })
-      .execute();
-    return new DeleteMessage('Class deleted successfully');
+    await this.classesRepository.delete(id);
+    return currentClass;
   }
 }
