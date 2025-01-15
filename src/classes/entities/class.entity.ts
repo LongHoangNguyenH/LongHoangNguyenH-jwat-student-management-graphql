@@ -1,14 +1,10 @@
 import { ObjectType, Field } from '@nestjs/graphql';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { StudentEntity } from 'src/students/entities/student.entity';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
 @ObjectType()
 @Entity('classes')
 export class ClassEntity {
-  constructor(id: string, className: string) {
-    this.id = id;
-    this.className = className;
-  }
-
   @Field(() => String)
   @PrimaryColumn()
   id: string;
@@ -16,4 +12,8 @@ export class ClassEntity {
   @Field(() => String)
   @Column({ unique: true, nullable: false })
   className: string;
+
+  @OneToMany(() => StudentEntity, student => student.cls)
+  @Field(() => [StudentEntity], { nullable: true })
+  students?: StudentEntity[];
 }

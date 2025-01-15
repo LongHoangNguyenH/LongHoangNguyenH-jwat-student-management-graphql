@@ -1,9 +1,9 @@
 services:
   postgres_db:
     image: postgres:16
-    container_name: postgres_db_graphql
+    container_name: postgres_db_graphql_v2
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

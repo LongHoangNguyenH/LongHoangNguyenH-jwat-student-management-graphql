@@ -5,12 +5,11 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 @ObjectType()
 @Entity('students')
 export class StudentEntity {
-  constructor(id: string, studentName: string, classId: string) {
+  constructor(id: string, studentName: string, cls: ClassEntity) {
     this.id = id;
     this.studentName = studentName;
-    this.classId = classId;
+    this.cls = cls;
   }
-
   @Field(() => String)
   @PrimaryColumn()
   id: string;
@@ -19,9 +18,11 @@ export class StudentEntity {
   @Column({ nullable: false, unique: true })
   studentName: string;
 
-  @Field(() => String)
-  @Column({ nullable: false })
-  @JoinColumn({ name: 'classId' })
-  @ManyToOne(() => ClassEntity, ClassEntity => ClassEntity.id)
-  classId: string;
+  @ManyToOne(() => ClassEntity, cls => cls.students, {
+    onDelete: 'CASCADE',
+    eager: true,
+  })
+  @Field(() => ClassEntity, { nullable: false })
+  @JoinColumn({ name: 'cls' })
+  cls: ClassEntity;
 }

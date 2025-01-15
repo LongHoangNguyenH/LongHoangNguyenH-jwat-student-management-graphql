@@ -13,7 +13,7 @@ import { Global, Module } from '@nestjs/common';
           const dataSource = new DataSource({
             type: 'postgres',
             host: 'localhost',
-            port: 5432,
+            port: 5433,
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,

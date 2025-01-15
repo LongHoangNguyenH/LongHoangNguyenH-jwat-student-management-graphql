@@ -5,30 +5,20 @@
 type ClassEntity {
   id: String!
   className: String!
+  students: [StudentEntity!]
 }
 
 type StudentEntity {
   id: String!
   studentName: String!
-  classId: String!
-}
-
-type DeleteMessage {
-  message: String
-}
-
-type StudentAddClassNameResponse {
-  id: String!
-  studentName: String!
-  classId: String!
-  className: String!
+  cls: ClassEntity!
 }
 
 type Query {
-  findOneStudent(id: String!): StudentAddClassNameResponse!
-  findAllStudent: [StudentAddClassNameResponse!]!
-  findByClassname(className: String!): [StudentAddClassNameResponse!]!
-  findLIKEByStudentName(studentName: String!): [StudentAddClassNameResponse!]!
+  findOneStudent(id: String!): StudentEntity!
+  findAllStudent: [StudentEntity!]!
+  findByClassname(className: String!): [StudentEntity!]!
+  findLIKEByStudentName(studentName: String!): [StudentEntity!]!
   findOneClass(id: String!): ClassEntity!
   findAllClasses: [ClassEntity!]!
 }
@@ -36,10 +26,10 @@ type Query {
 type Mutation {
   createStudent(createStudentInput: CreateStudentInput!): StudentEntity!
   updateStudent(id: String!, updateStudentInput: UpdateStudentInput!): StudentEntity!
-  removeStudents(id: String!): DeleteMessage!
+  removeStudents(id: String!): StudentEntity!
   createClass(createClassInput: CreateClassInput!): ClassEntity!
   updateClass(id: String!, updateClassInput: UpdateClassInput!): ClassEntity!
-  removeClass(id: String!): DeleteMessage!
+  removeClass(id: String!): ClassEntity!
 }
 
 input CreateStudentInput {
